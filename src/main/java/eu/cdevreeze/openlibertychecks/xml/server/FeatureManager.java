@@ -17,22 +17,22 @@
 package eu.cdevreeze.openlibertychecks.xml.server;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
-import javax.xml.namespace.QName;
-import java.util.Optional;
+import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
 
 /**
- * Element named "jndiEntry" in a server.xml file.
+ * Element named "featureManager" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class JndiEntry implements ServerXmlContent {
+public final class FeatureManager implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public JndiEntry(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jndiEntry"));
+    public FeatureManager(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("featureManager"));
         this.element = element;
     }
 
@@ -40,25 +40,9 @@ public final class JndiEntry implements ServerXmlContent {
         return element;
     }
 
-    public Optional<String> idOption() {
-        return element.attributeOption(new QName("id"));
-    }
-
-    public String jndiName() {
-        return element.attribute(new QName("jndiName"));
-    }
-
-    public String value() {
-        return element.attribute(new QName("value"));
-    }
-
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> decodeAsStringOption() {
-        return element.attributeOption(new QName("decode"));
-    }
-
-    public boolean decode() {
-        return decodeAsStringOption().map(Boolean::valueOf).orElse(Boolean.FALSE);
+    public ImmutableList<String> features() {
+        return element.childElementStream(hasName("feature"))
+                .map(ElementTree.Element::text)
+                .collect(ImmutableList.toImmutableList());
     }
 }

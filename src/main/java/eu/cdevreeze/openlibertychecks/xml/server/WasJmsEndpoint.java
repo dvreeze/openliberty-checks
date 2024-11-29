@@ -47,4 +47,34 @@ public final class WasJmsEndpoint implements ServerXmlContent {
     public String host() {
         return hostOption().orElse("localhost");
     }
+
+    // In case configuration variables have not yet been resolved
+
+    public Optional<String> wasJmsPortAsStringOption() {
+        return element.attributeOption(new QName("wasJmsPort"))
+                .stream()
+                .findFirst();
+    }
+
+    public Optional<String> wasJmsSSLPortAsStringOption() {
+        return element.attributeOption(new QName("wasJmsSSLPort"))
+                .stream()
+                .findFirst();
+    }
+
+    public int wasJmsPort() {
+        return wasJmsPortAsStringOption()
+                .stream()
+                .mapToInt(Integer::parseInt)
+                .findFirst()
+                .orElse(7276);
+    }
+
+    public int wasJmsSSLPort() {
+        return wasJmsSSLPortAsStringOption()
+                .stream()
+                .mapToInt(Integer::parseInt)
+                .findFirst()
+                .orElse(7286);
+    }
 }

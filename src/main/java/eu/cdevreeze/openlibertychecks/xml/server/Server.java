@@ -45,17 +45,13 @@ public final class Server implements ServerXmlContent {
         return element;
     }
 
-    // TODO dataSource and logging sections
-
     public Optional<String> descriptionOption() {
         return element.attributeOption(new QName("description"));
     }
 
-    public ImmutableList<String> features() {
+    public ImmutableList<FeatureManager> featureManagers() {
         return element.childElementStream(hasName("featureManager"))
-                .flatMap(e -> e.childElementStream(hasName("feature")))
-                .map(ElementTree.Element::text)
-                .map(String::strip)
+                .map(FeatureManager::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
@@ -65,10 +61,10 @@ public final class Server implements ServerXmlContent {
                 .collect(ImmutableList.toImmutableList());
     }
 
-    public Optional<ApplicationManager> applicationManagerOption() {
+    public ImmutableList<ApplicationManager> applicationManagers() {
         return element.childElementStream(hasName("applicationManager"))
                 .map(ApplicationManager::new)
-                .findFirst();
+                .collect(ImmutableList.toImmutableList());
     }
 
     public ImmutableList<JndiEntry> jndiEntries() {
@@ -83,6 +79,12 @@ public final class Server implements ServerXmlContent {
                 .collect(ImmutableList.toImmutableList());
     }
 
+    public ImmutableList<DataSource> dataSources() {
+        return element.childElementStream(hasName("dataSource"))
+                .map(DataSource::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
     public ImmutableList<ActivationSpec> activationSpecs() {
         return element.childElementStream(hasName("activationSpec"))
                 .map(ActivationSpec::new)
@@ -92,6 +94,24 @@ public final class Server implements ServerXmlContent {
     public ImmutableList<JmsActivationSpec> jmsActivationSpecs() {
         return element.childElementStream(hasName("jmsActivationSpec"))
                 .map(JmsActivationSpec::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsConnectionFactory> jmsConnectionFactories() {
+        return element.childElementStream(hasName("jmsConnectionFactory"))
+                .map(JmsConnectionFactory::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsQueueConnectionFactory> jmsQueueConnectionFactories() {
+        return element.childElementStream(hasName("jmsQueueConnectionFactory"))
+                .map(JmsQueueConnectionFactory::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsTopicConnectionFactory> jmsTopicConnectionFactories() {
+        return element.childElementStream(hasName("jmsTopicConnectionFactory"))
+                .map(JmsTopicConnectionFactory::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
@@ -110,6 +130,18 @@ public final class Server implements ServerXmlContent {
     public ImmutableList<KeyStore> keyStores() {
         return element.childElementStream(hasName("keyStore"))
                 .map(KeyStore::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Library> libraries() {
+        return element.childElementStream(hasName("library"))
+                .map(Library::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Logging> loggings() {
+        return element.childElementStream(hasName("logging"))
+                .map(Logging::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
@@ -134,6 +166,12 @@ public final class Server implements ServerXmlContent {
     public ImmutableList<SslDefault> sslDefaults() {
         return element.childElementStream(hasName("sslDefault"))
                 .map(SslDefault::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Transaction> transactions() {
+        return element.childElementStream(hasName("transaction"))
+                .map(Transaction::new)
                 .collect(ImmutableList.toImmutableList());
     }
 

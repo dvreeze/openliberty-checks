@@ -89,4 +89,12 @@ public final class ConnectionManager implements ServerXmlContent {
                 .mapToInt(Integer::parseInt)
                 .findFirst();
     }
+
+    public Optional<String> reapTimeOption() {
+        return element.attributeOption(new QName("reapTime"));
+    }
+
+    public String reapTime() {
+        return reapTimeOption().orElse("3m");
+    }
 }

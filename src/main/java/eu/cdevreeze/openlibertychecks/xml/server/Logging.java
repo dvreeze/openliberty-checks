@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 import java.util.Optional;
 
 /**
- * Element named "jndiEntry" in a server.xml file.
+ * Element named "logging" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class JndiEntry implements ServerXmlContent {
+public final class Logging implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public JndiEntry(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jndiEntry"));
+    public Logging(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("logging"));
         this.element = element;
     }
 
@@ -40,25 +40,11 @@ public final class JndiEntry implements ServerXmlContent {
         return element;
     }
 
-    public Optional<String> idOption() {
-        return element.attributeOption(new QName("id"));
+    public Optional<String> hideMessageOption() {
+        return element.attributeOption(new QName("hideMessage"));
     }
 
-    public String jndiName() {
-        return element.attribute(new QName("jndiName"));
-    }
-
-    public String value() {
-        return element.attribute(new QName("value"));
-    }
-
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> decodeAsStringOption() {
-        return element.attributeOption(new QName("decode"));
-    }
-
-    public boolean decode() {
-        return decodeAsStringOption().map(Boolean::valueOf).orElse(Boolean.FALSE);
+    public Optional<String> traceSpecificationOption() {
+        return element.attributeOption(new QName("traceSpecification"));
     }
 }

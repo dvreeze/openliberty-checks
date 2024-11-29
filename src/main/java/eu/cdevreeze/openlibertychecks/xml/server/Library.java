@@ -26,16 +26,16 @@ import java.util.Optional;
 import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
 
 /**
- * Element named "messagingEngine" in a server.xml file.
+ * Element named "library" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class MessagingEngine implements ServerXmlContent {
+public final class Library implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public MessagingEngine(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("messagingEngine"));
+    public Library(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("library"));
         this.element = element;
     }
 
@@ -43,21 +43,25 @@ public final class MessagingEngine implements ServerXmlContent {
         return element;
     }
 
-    public ImmutableList<Queue> queues() {
-        return element.childElementStream(hasName("queue"))
-                .map(Queue::new)
+    public Optional<String> idOption() {
+        return element.attributeOption(new QName("id"));
+    }
+
+    public ImmutableList<Fileset> filesets() {
+        return element.childElementStream(hasName("fileset"))
+                .map(Fileset::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
-    public static final class Queue implements ServerXmlContent {
+    public static final class Fileset implements ServerXmlContent {
 
         private final ElementTree.Element element;
 
-        public Queue(ElementTree.Element element) {
-            Preconditions.checkArgument(element.elementName().getLocalPart().equals("queue"));
+        public Fileset(ElementTree.Element element) {
+            Preconditions.checkArgument(element.elementName().getLocalPart().equals("fileset"));
             Preconditions.checkArgument(element.parentElementOption().isPresent());
             Preconditions.checkArgument(
-                    element.parentElementOption().orElseThrow().elementName().getLocalPart().equals("messagingEngine")
+                    element.parentElementOption().orElseThrow().elementName().getLocalPart().equals("library")
             );
             this.element = element;
         }
@@ -66,8 +70,8 @@ public final class MessagingEngine implements ServerXmlContent {
             return element;
         }
 
-        public Optional<String> idOption() {
-            return element.attributeOption(new QName("id"));
+        public Optional<String> dirOption() {
+            return element.attributeOption(new QName("dir"));
         }
     }
 }

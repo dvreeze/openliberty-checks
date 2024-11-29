@@ -52,6 +52,10 @@ public final class KeyStore implements ServerXmlContent {
         return element.attributeOption(new QName("location"));
     }
 
+    public Optional<String> passwordOption() {
+        return element.attributeOption(new QName("password"));
+    }
+
     public Optional<String> typeOption() {
         return element.attributeOption(new QName("type"));
     }

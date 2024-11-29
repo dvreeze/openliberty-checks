@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 import java.util.Optional;
 
 /**
- * Element named "jndiEntry" in a server.xml file.
+ * Element named "jmsQueueConnectionFactory" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class JndiEntry implements ServerXmlContent {
+public final class JmsQueueConnectionFactory implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public JndiEntry(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jndiEntry"));
+    public JmsQueueConnectionFactory(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jmsQueueConnectionFactory"));
         this.element = element;
     }
 
@@ -44,21 +44,11 @@ public final class JndiEntry implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public String jndiName() {
-        return element.attribute(new QName("jndiName"));
+    public Optional<String> jndiNameOption() {
+        return element.attributeOption(new QName("jndiName"));
     }
 
-    public String value() {
-        return element.attribute(new QName("value"));
-    }
-
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> decodeAsStringOption() {
-        return element.attributeOption(new QName("decode"));
-    }
-
-    public boolean decode() {
-        return decodeAsStringOption().map(Boolean::valueOf).orElse(Boolean.FALSE);
+    public Optional<String> connectionManagerRefOption() {
+        return element.attributeOption(new QName("connectionManagerRef"));
     }
 }
