@@ -21,19 +21,18 @@ import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
- * Element named "httpEndpoint" in a server.xml file.
+ * Element named "keyStore" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class HttpEndpoint implements ServerXmlContent {
+public final class KeyStore implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public HttpEndpoint(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("httpEndpoint"));
+    public KeyStore(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("keyStore"));
         this.element = element;
     }
 
@@ -45,31 +44,29 @@ public final class HttpEndpoint implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
+    public Optional<String> locationOption() {
+        return element.attributeOption(new QName("location"));
+    }
+
+    public Optional<String> typeOption() {
+        return element.attributeOption(new QName("type"));
+    }
+
     // In case configuration variables have not yet been resolved
 
-    public Optional<String> httpPortAsStringOption() {
-        return element.attributeOption(new QName("httpPort"))
-                .stream()
-                .findFirst();
+    public Optional<String> fileBasedAsStringOption() {
+        return element.attributeOption(new QName("fileBased"));
     }
 
-    public Optional<String> httpsPortAsStringOption() {
-        return element.attributeOption(new QName("httpsPort"))
-                .stream()
-                .findFirst();
+    public boolean fileBased() {
+        return fileBasedAsStringOption().map(Boolean::parseBoolean).orElse(true);
     }
 
-    public OptionalInt httpPortOption() {
-        return httpPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
+    public Optional<String> readOnlyAsStringOption() {
+        return element.attributeOption(new QName("readOnly"));
     }
 
-    public OptionalInt httpsPortOption() {
-        return httpsPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
+    public boolean readOnly() {
+        return readOnlyAsStringOption().map(Boolean::parseBoolean).orElse(false);
     }
 }

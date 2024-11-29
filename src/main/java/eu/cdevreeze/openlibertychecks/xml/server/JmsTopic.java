@@ -21,19 +21,18 @@ import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
- * Element named "httpEndpoint" in a server.xml file.
+ * Element named "jmsTopic" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class HttpEndpoint implements ServerXmlContent {
+public final class JmsTopic implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public HttpEndpoint(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("httpEndpoint"));
+    public JmsTopic(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jmsTopic"));
         this.element = element;
     }
 
@@ -45,31 +44,7 @@ public final class HttpEndpoint implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> httpPortAsStringOption() {
-        return element.attributeOption(new QName("httpPort"))
-                .stream()
-                .findFirst();
-    }
-
-    public Optional<String> httpsPortAsStringOption() {
-        return element.attributeOption(new QName("httpsPort"))
-                .stream()
-                .findFirst();
-    }
-
-    public OptionalInt httpPortOption() {
-        return httpPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
-    }
-
-    public OptionalInt httpsPortOption() {
-        return httpsPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
+    public Optional<String> jndiNameOption() {
+        return element.attributeOption(new QName("jndiName"));
     }
 }

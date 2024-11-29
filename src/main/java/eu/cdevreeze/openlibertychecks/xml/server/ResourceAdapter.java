@@ -21,19 +21,18 @@ import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
- * Element named "httpEndpoint" in a server.xml file.
+ * Element named "resourceAdapter" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class HttpEndpoint implements ServerXmlContent {
+public final class ResourceAdapter implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public HttpEndpoint(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("httpEndpoint"));
+    public ResourceAdapter(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("resourceAdapter"));
         this.element = element;
     }
 
@@ -45,31 +44,17 @@ public final class HttpEndpoint implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
+    public String location() {
+        return element.attribute(new QName("location"));
+    }
+
     // In case configuration variables have not yet been resolved
 
-    public Optional<String> httpPortAsStringOption() {
-        return element.attributeOption(new QName("httpPort"))
-                .stream()
-                .findFirst();
+    public Optional<String> autoStartAsStringOption() {
+        return element.attributeOption(new QName("autoStart"));
     }
 
-    public Optional<String> httpsPortAsStringOption() {
-        return element.attributeOption(new QName("httpsPort"))
-                .stream()
-                .findFirst();
-    }
-
-    public OptionalInt httpPortOption() {
-        return httpPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
-    }
-
-    public OptionalInt httpsPortOption() {
-        return httpsPortAsStringOption()
-                .stream()
-                .mapToInt(Integer::parseInt)
-                .findFirst();
+    public Optional<Boolean> autoStartOption() {
+        return autoStartAsStringOption().map(Boolean::parseBoolean);
     }
 }

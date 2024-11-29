@@ -19,34 +19,21 @@ package eu.cdevreeze.openlibertychecks.xml.server;
 import com.google.common.base.Preconditions;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
-import javax.xml.namespace.QName;
-import java.util.Optional;
-
 /**
- * Element named "applicationManager" in a server.xml file.
+ * Element named "webApplication" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class ApplicationManager implements ServerXmlContent {
+public final class WebApplication implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public ApplicationManager(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("applicationManager"));
+    public WebApplication(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("webApplication"));
         this.element = element;
     }
 
     public ElementTree.Element getElement() {
         return element;
-    }
-
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> autoExpandAsStringOption() {
-        return element.attributeOption(new QName("autoExpand"));
-    }
-
-    public Optional<Boolean> autoExpandOption() {
-        return autoExpandAsStringOption().map(Boolean::parseBoolean);
     }
 }

@@ -32,7 +32,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class Server {
+public final class Server implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
@@ -75,5 +75,69 @@ public final class Server {
                 .collect(ImmutableList.toImmutableList());
     }
 
-    // TODO
+    public ImmutableList<ConnectionManager> connectionManagers() {
+        return element.childElementStream(hasName("connectionManager"))
+                .map(ConnectionManager::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsActivationSpec> jmsActivationSpecs() {
+        return element.childElementStream(hasName("jmsActivationSpec"))
+                .map(JmsActivationSpec::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsQueue> jmsQueues() {
+        return element.childElementStream(hasName("jmsQueue"))
+                .map(JmsQueue::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<JmsTopic> jmsTopics() {
+        return element.childElementStream(hasName("jmsTopic"))
+                .map(JmsTopic::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<KeyStore> keyStores() {
+        return element.childElementStream(hasName("keyStore"))
+                .map(KeyStore::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<MessagingEngine> messagingEngines() {
+        return element.childElementStream(hasName("messagingEngine"))
+                .map(MessagingEngine::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<ResourceAdapter> resourceAdapters() {
+        return element.childElementStream(hasName("resourceAdapter"))
+                .map(ResourceAdapter::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Ssl> ssls() {
+        return element.childElementStream(hasName("ssl"))
+                .map(Ssl::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<SslDefault> sslDefaults() {
+        return element.childElementStream(hasName("sslDefault"))
+                .map(SslDefault::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<WasJmsEndpoint> wasJmsEndpoints() {
+        return element.childElementStream(hasName("wasJmsEndpoint"))
+                .map(WasJmsEndpoint::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<WebApplication> webApplications() {
+        return element.childElementStream(hasName("webApplication"))
+                .map(WebApplication::new)
+                .collect(ImmutableList.toImmutableList());
+    }
 }

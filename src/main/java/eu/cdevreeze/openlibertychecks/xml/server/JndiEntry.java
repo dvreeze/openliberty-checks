@@ -27,7 +27,7 @@ import java.util.Optional;
  *
  * @author Chris de Vreeze
  */
-public final class JndiEntry {
+public final class JndiEntry implements ServerXmlContent {
 
     private final ElementTree.Element element;
 

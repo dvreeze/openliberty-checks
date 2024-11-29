@@ -24,16 +24,16 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * Element named "httpEndpoint" in a server.xml file.
+ * Element named "connectionManager" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class HttpEndpoint implements ServerXmlContent {
+public final class ConnectionManager implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public HttpEndpoint(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("httpEndpoint"));
+    public ConnectionManager(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("connectionManager"));
         this.element = element;
     }
 
@@ -45,29 +45,46 @@ public final class HttpEndpoint implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
+    public Optional<String> connectionTimeoutOption() {
+        return element.attributeOption(new QName("connectionTimeout"));
+    }
+
+    public Optional<String> maxIdleTimeOption() {
+        return element.attributeOption(new QName("maxIdleTime"));
+    }
+
     // In case configuration variables have not yet been resolved
 
-    public Optional<String> httpPortAsStringOption() {
-        return element.attributeOption(new QName("httpPort"))
-                .stream()
-                .findFirst();
+    public Optional<String> agedTimeoutAsStringOption() {
+        return element.attributeOption(new QName("agedTimeout"));
     }
 
-    public Optional<String> httpsPortAsStringOption() {
-        return element.attributeOption(new QName("httpsPort"))
-                .stream()
-                .findFirst();
-    }
-
-    public OptionalInt httpPortOption() {
-        return httpPortAsStringOption()
+    public int agedTimeout() {
+        return agedTimeoutAsStringOption()
                 .stream()
                 .mapToInt(Integer::parseInt)
-                .findFirst();
+                .findFirst()
+                .orElse(-1);
     }
 
-    public OptionalInt httpsPortOption() {
-        return httpsPortAsStringOption()
+    public Optional<String> maxPoolSizeAsStringOption() {
+        return element.attributeOption(new QName("maxPoolSize"));
+    }
+
+    public Optional<String> minPoolSizeAsStringOption() {
+        return element.attributeOption(new QName("minPoolSize"));
+    }
+
+    public int maxPoolSize() {
+        return maxPoolSizeAsStringOption()
+                .stream()
+                .mapToInt(Integer::parseInt)
+                .findFirst()
+                .orElse(50);
+    }
+
+    public OptionalInt minPoolSizeOption() {
+        return minPoolSizeAsStringOption()
                 .stream()
                 .mapToInt(Integer::parseInt)
                 .findFirst();

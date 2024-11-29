@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 import java.util.Optional;
 
 /**
- * Element named "applicationManager" in a server.xml file.
+ * Element named "messagingEngine" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class ApplicationManager implements ServerXmlContent {
+public final class MessagingEngine implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public ApplicationManager(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("applicationManager"));
+    public MessagingEngine(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("messagingEngine"));
         this.element = element;
     }
 
@@ -40,13 +40,17 @@ public final class ApplicationManager implements ServerXmlContent {
         return element;
     }
 
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> autoExpandAsStringOption() {
-        return element.attributeOption(new QName("autoExpand"));
+    public Optional<String> locationOption() {
+        return element.attributeOption(new QName("location"));
     }
 
-    public Optional<Boolean> autoExpandOption() {
-        return autoExpandAsStringOption().map(Boolean::parseBoolean);
+    // In case configuration variables have not yet been resolved
+
+    public Optional<String> sendAllowedAsStringOption() {
+        return element.attributeOption(new QName("sendAllowed"));
+    }
+
+    public boolean sendAllowed() {
+        return sendAllowedAsStringOption().map(Boolean::parseBoolean).orElse(true);
     }
 }
