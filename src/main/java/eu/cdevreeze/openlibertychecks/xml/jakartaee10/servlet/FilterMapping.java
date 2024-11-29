@@ -32,7 +32,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class FilterMapping {
+public final class FilterMapping implements WebXmlContent {
 
     public enum Dispatcher {
         FORWARD, INCLUDE, REQUEST, ASYNC, ERROR

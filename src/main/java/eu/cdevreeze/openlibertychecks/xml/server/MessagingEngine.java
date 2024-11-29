@@ -19,9 +19,6 @@ package eu.cdevreeze.openlibertychecks.xml.server;
 import com.google.common.base.Preconditions;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
-import javax.xml.namespace.QName;
-import java.util.Optional;
-
 /**
  * Element named "messagingEngine" in a server.xml file.
  *
@@ -38,19 +35,5 @@ public final class MessagingEngine implements ServerXmlContent {
 
     public ElementTree.Element getElement() {
         return element;
-    }
-
-    public Optional<String> locationOption() {
-        return element.attributeOption(new QName("location"));
-    }
-
-    // In case configuration variables have not yet been resolved
-
-    public Optional<String> sendAllowedAsStringOption() {
-        return element.attributeOption(new QName("sendAllowed"));
-    }
-
-    public boolean sendAllowed() {
-        return sendAllowedAsStringOption().map(Boolean::parseBoolean).orElse(true);
     }
 }

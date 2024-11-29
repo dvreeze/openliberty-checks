@@ -44,7 +44,7 @@ public final class JmsActivationSpec implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public Optional<String> authDataRef() {
+    public Optional<String> authDataRefOption() {
         return element.attributeOption(new QName("authDataRef"));
     }
 
@@ -55,7 +55,14 @@ public final class JmsActivationSpec implements ServerXmlContent {
     }
 
     public boolean autoStart() {
-        return autoStartAsStringOption().map(Boolean::parseBoolean)
-                .orElse(true);
+        return autoStartAsStringOption().map(Boolean::parseBoolean).orElse(true);
+    }
+
+    public Optional<String> maxEndpointsAsStringOption() {
+        return element.attributeOption(new QName("maxEndpoints"));
+    }
+
+    public int maxEndpoints() {
+        return maxEndpointsAsStringOption().map(Integer::parseInt).orElse(500);
     }
 }

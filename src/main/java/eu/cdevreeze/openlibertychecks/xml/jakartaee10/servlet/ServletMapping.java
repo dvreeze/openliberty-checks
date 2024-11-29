@@ -32,7 +32,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class ServletMapping {
+public final class ServletMapping implements WebXmlContent {
 
     private final ElementTree.Element element;
 

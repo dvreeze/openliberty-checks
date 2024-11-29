@@ -40,13 +40,25 @@ public final class ApplicationManager implements ServerXmlContent {
         return element;
     }
 
+    public Optional<String> expandLocationOption() {
+        return element.attributeOption(new QName("expandLocation"));
+    }
+
+    public Optional<String> startTimeoutOption() {
+        return element.attributeOption(new QName("startTimeout"));
+    }
+
+    public Optional<String> stopTimeoutOption() {
+        return element.attributeOption(new QName("stopTimeout"));
+    }
+
     // In case configuration variables have not yet been resolved
 
     public Optional<String> autoExpandAsStringOption() {
         return element.attributeOption(new QName("autoExpand"));
     }
 
-    public Optional<Boolean> autoExpandOption() {
-        return autoExpandAsStringOption().map(Boolean::parseBoolean);
+    public boolean autoExpand() {
+        return autoExpandAsStringOption().map(Boolean::parseBoolean).orElse(false);
     }
 }

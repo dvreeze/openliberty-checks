@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 import java.util.Optional;
 
 /**
- * Element named "webApplication" in a server.xml file.
+ * Element named "activationSpec" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class WebApplication implements ServerXmlContent {
+public final class ActivationSpec implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public WebApplication(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("webApplication"));
+    public ActivationSpec(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("activationSpec"));
         this.element = element;
     }
 
@@ -44,19 +44,25 @@ public final class WebApplication implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public Optional<String> contextRootOption() {
-        return element.attributeOption(new QName("contextRoot"));
+    public Optional<String> authDataRefOption() {
+        return element.attributeOption(new QName("authDataRef"));
     }
 
-    public Optional<String> nameOption() {
-        return element.attributeOption(new QName("name"));
+    // In case configuration variables have not yet been resolved
+
+    public Optional<String> autoStartAsStringOption() {
+        return element.attributeOption(new QName("autoStart"));
     }
 
-    public Optional<String> locationOption() {
-        return element.attributeOption(new QName("location"));
+    public boolean autoStart() {
+        return autoStartAsStringOption().map(Boolean::parseBoolean).orElse(true);
     }
 
-    public String location() {
-        return locationOption().orElseThrow();
+    public Optional<String> maxEndpointsAsStringOption() {
+        return element.attributeOption(new QName("maxEndpoints"));
+    }
+
+    public int maxEndpoints() {
+        return maxEndpointsAsStringOption().map(Integer::parseInt).orElse(500);
     }
 }

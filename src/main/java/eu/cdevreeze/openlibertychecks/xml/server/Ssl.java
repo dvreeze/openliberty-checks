@@ -19,6 +19,9 @@ package eu.cdevreeze.openlibertychecks.xml.server;
 import com.google.common.base.Preconditions;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
+import javax.xml.namespace.QName;
+import java.util.Optional;
+
 /**
  * Element named "ssl" in a server.xml file.
  *
@@ -35,5 +38,17 @@ public final class Ssl implements ServerXmlContent {
 
     public ElementTree.Element getElement() {
         return element;
+    }
+
+    public Optional<String> idOption() {
+        return element.attributeOption(new QName("id"));
+    }
+
+    public Optional<String> keyStoreRefOption() {
+        return element.attributeOption(new QName("keyStoreRef"));
+    }
+
+    public Optional<String> trustStoreRefOption() {
+        return element.attributeOption(new QName("trustStoreRef"));
     }
 }

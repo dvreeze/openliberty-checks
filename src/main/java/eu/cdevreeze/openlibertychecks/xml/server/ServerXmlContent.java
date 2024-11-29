@@ -19,7 +19,7 @@ package eu.cdevreeze.openlibertychecks.xml.server;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 /**
- * Any XML element in a server.xml that gets its own class.
+ * Any XML element in a server.xml file that gets its own class.
  *
  * @author Chris de Vreeze
  */

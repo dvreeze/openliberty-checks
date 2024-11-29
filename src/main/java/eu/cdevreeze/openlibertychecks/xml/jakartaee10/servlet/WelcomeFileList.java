@@ -31,7 +31,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class WelcomeFileList {
+public final class WelcomeFileList implements WebXmlContent {
 
     private final ElementTree.Element element;
 

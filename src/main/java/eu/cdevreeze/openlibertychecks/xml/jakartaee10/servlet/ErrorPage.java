@@ -30,7 +30,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class ErrorPage {
+public final class ErrorPage implements WebXmlContent {
 
     private final ElementTree.Element element;
 

@@ -44,12 +44,20 @@ public final class KeyStore implements ServerXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
+    public String id() {
+        return idOption().orElse("defaultKeyStore");
+    }
+
     public Optional<String> locationOption() {
         return element.attributeOption(new QName("location"));
     }
 
     public Optional<String> typeOption() {
         return element.attributeOption(new QName("type"));
+    }
+
+    public String type() {
+        return typeOption().orElse("PKCS12");
     }
 
     // In case configuration variables have not yet been resolved

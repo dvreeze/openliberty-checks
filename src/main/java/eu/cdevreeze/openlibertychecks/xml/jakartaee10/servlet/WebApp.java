@@ -29,7 +29,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class WebApp {
+public final class WebApp implements WebXmlContent {
 
     private final ElementTree.Element element;
 

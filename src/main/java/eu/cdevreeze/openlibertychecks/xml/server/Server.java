@@ -45,6 +45,8 @@ public final class Server implements ServerXmlContent {
         return element;
     }
 
+    // TODO dataSource and logging sections
+
     public Optional<String> descriptionOption() {
         return element.attributeOption(new QName("description"));
     }
@@ -78,6 +80,12 @@ public final class Server implements ServerXmlContent {
     public ImmutableList<ConnectionManager> connectionManagers() {
         return element.childElementStream(hasName("connectionManager"))
                 .map(ConnectionManager::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<ActivationSpec> activationSpecs() {
+        return element.childElementStream(hasName("activationSpec"))
+                .map(ActivationSpec::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
@@ -126,6 +134,12 @@ public final class Server implements ServerXmlContent {
     public ImmutableList<SslDefault> sslDefaults() {
         return element.childElementStream(hasName("sslDefault"))
                 .map(SslDefault::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Variable> variables() {
+        return element.childElementStream(hasName("variable"))
+                .map(Variable::new)
                 .collect(ImmutableList.toImmutableList());
     }
 

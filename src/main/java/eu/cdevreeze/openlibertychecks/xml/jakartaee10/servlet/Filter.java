@@ -33,7 +33,7 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  *
  * @author Chris de Vreeze
  */
-public final class Filter {
+public final class Filter implements WebXmlContent {
 
     private final ElementTree.Element element;
 

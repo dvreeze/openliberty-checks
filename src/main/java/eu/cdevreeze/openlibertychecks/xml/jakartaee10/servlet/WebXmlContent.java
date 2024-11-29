@@ -14,33 +14,16 @@
  * limitations under the License.
  */
 
-package eu.cdevreeze.openlibertychecks.xml.server;
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet;
 
-import com.google.common.base.Preconditions;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
-import javax.xml.namespace.QName;
-import java.util.Optional;
-
 /**
- * Element named "sslDefault" in a server.xml file.
+ * Any XML element in a web.xml file that gets its own class.
  *
  * @author Chris de Vreeze
  */
-public final class SslDefault implements ServerXmlContent {
+public interface WebXmlContent {
 
-    private final ElementTree.Element element;
-
-    public SslDefault(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("sslDefault"));
-        this.element = element;
-    }
-
-    public ElementTree.Element getElement() {
-        return element;
-    }
-
-    public Optional<String> sslRefOption() {
-        return element.attributeOption(new QName("sslRef"));
-    }
+    ElementTree.Element getElement();
 }

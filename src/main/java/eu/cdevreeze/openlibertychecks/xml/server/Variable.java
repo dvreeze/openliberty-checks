@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 import java.util.Optional;
 
 /**
- * Element named "sslDefault" in a server.xml file.
+ * Element named "variable" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class SslDefault implements ServerXmlContent {
+public final class Variable implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public SslDefault(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("sslDefault"));
+    public Variable(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("variable"));
         this.element = element;
     }
 
@@ -40,7 +40,15 @@ public final class SslDefault implements ServerXmlContent {
         return element;
     }
 
-    public Optional<String> sslRefOption() {
-        return element.attributeOption(new QName("sslRef"));
+    public String name() {
+        return element.attribute(new QName("name"));
+    }
+
+    public Optional<String> valueOption() {
+        return element.attributeOption(new QName("value"));
+    }
+
+    public Optional<String> defaultValueOption() {
+        return element.attributeOption(new QName("defaultValue"));
     }
 }

@@ -72,4 +72,12 @@ public final class HttpEndpoint implements ServerXmlContent {
                 .mapToInt(Integer::parseInt)
                 .findFirst();
     }
+
+    public Optional<String> hostOption() {
+        return element.attributeOption(new QName("host"));
+    }
+
+    public String host() {
+        return hostOption().orElse("localhost");
+    }
 }
