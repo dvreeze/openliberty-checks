@@ -57,6 +57,7 @@ public class ServletDialectTests {
         WebApp webApp = new WebApp(doc.documentElement());
 
         String ns = webApp.getElement().elementName().getNamespaceURI();
+        assertEquals(Names.JAKARTAEE_NS, ns);
 
         assertEquals(
                 "Servlet 3.0 application",

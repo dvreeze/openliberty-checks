@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package eu.cdevreeze.openlibertychecks.xml.jakartaee10;
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10.ejb;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.Names;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
@@ -25,16 +27,17 @@ import java.util.Optional;
 import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
 
 /**
- * Listener XML element wrapper.
+ * Method permission XML element wrapper.
  *
  * @author Chris de Vreeze
  */
-public final class Listener implements JakartaEEXmlContent {
+public final class MethodPermission implements EjbJarXmlContent {
 
     private final ElementTree.Element element;
 
-    public Listener(ElementTree.Element element) {
+    public MethodPermission(ElementTree.Element element) {
         Preconditions.checkArgument(Names.JAKARTAEE_NS.equals(element.elementName().getNamespaceURI()));
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("method-permission"));
 
         this.element = element;
     }
@@ -47,12 +50,17 @@ public final class Listener implements JakartaEEXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public String listenerClass() {
+    public ImmutableList<String> roleNames() {
         String ns = element.elementName().getNamespaceURI();
-        return element
-                .childElementStream(hasName(ns, "listener-class"))
-                .findFirst()
-                .orElseThrow()
-                .text();
+        return element.childElementStream(hasName(ns, "role-name"))
+                .map(ElementTree.Element::text)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<Method> methods() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "method"))
+                .map(Method::new)
+                .collect(ImmutableList.toImmutableList());
     }
 }

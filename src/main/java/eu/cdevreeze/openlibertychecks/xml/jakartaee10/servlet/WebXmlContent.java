@@ -16,14 +16,12 @@
 
 package eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet;
 
-import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.JakartaEEXmlContent;
 
 /**
  * Any XML element in a web.xml file that gets its own class.
  *
  * @author Chris de Vreeze
  */
-public interface WebXmlContent {
-
-    ElementTree.Element getElement();
+public interface WebXmlContent extends JakartaEEXmlContent {
 }

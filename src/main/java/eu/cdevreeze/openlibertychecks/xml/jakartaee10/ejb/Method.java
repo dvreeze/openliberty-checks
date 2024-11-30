@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package eu.cdevreeze.openlibertychecks.xml.jakartaee10;
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10.ejb;
 
 import com.google.common.base.Preconditions;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.Names;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
@@ -25,16 +26,17 @@ import java.util.Optional;
 import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
 
 /**
- * Listener XML element wrapper.
+ * Method XML element wrapper.
  *
  * @author Chris de Vreeze
  */
-public final class Listener implements JakartaEEXmlContent {
+public final class Method implements EjbJarXmlContent {
 
     private final ElementTree.Element element;
 
-    public Listener(ElementTree.Element element) {
+    public Method(ElementTree.Element element) {
         Preconditions.checkArgument(Names.JAKARTAEE_NS.equals(element.elementName().getNamespaceURI()));
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("method"));
 
         this.element = element;
     }
@@ -47,12 +49,34 @@ public final class Listener implements JakartaEEXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public String listenerClass() {
+    public String ejbName() {
         String ns = element.elementName().getNamespaceURI();
-        return element
-                .childElementStream(hasName(ns, "listener-class"))
+        return element.childElementStream(hasName(ns, "ejb-name"))
                 .findFirst()
                 .orElseThrow()
                 .text();
+    }
+
+    public Optional<MethodIntfType> methodIntfTypeOption() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "method-intf"))
+                .findFirst()
+                .map(ElementTree.Element::text)
+                .map(MethodIntfType::valueOf);
+    }
+
+    public String methodName() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "method-name"))
+                .findFirst()
+                .orElseThrow()
+                .text();
+    }
+
+    public Optional<MethodParams> methodParamsElementOption() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "method-params"))
+                .findFirst()
+                .map(MethodParams::new);
     }
 }

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10.ejb;
+
 /**
- * Very lightweight querying support for several XML dialects of Jakarta EE and OpenLiberty configuration
- * files. These support class wrap underlying XML "DOM" elements, for some very common parts of the
- * dialect. This support makes querying for a dialect a bit friendlier than plain XML querying (using only
- * the yaidom4j element query API).
+ * Session bean type enum.
  *
  * @author Chris de Vreeze
  */
-package eu.cdevreeze.openlibertychecks.xml;
+public enum SessionType {
+    Singleton, Stateful, Stateless
+}

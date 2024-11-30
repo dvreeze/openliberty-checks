@@ -25,15 +25,15 @@ import java.util.Optional;
 import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
 
 /**
- * Listener XML element wrapper.
+ * Security role XML element wrapper.
  *
  * @author Chris de Vreeze
  */
-public final class Listener implements JakartaEEXmlContent {
+public final class SecurityRole implements JakartaEEXmlContent {
 
     private final ElementTree.Element element;
 
-    public Listener(ElementTree.Element element) {
+    public SecurityRole(ElementTree.Element element) {
         Preconditions.checkArgument(Names.JAKARTAEE_NS.equals(element.elementName().getNamespaceURI()));
 
         this.element = element;
@@ -47,10 +47,10 @@ public final class Listener implements JakartaEEXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public String listenerClass() {
+    public String roleName() {
         String ns = element.elementName().getNamespaceURI();
         return element
-                .childElementStream(hasName(ns, "listener-class"))
+                .childElementStream(hasName(ns, "role-name"))
                 .findFirst()
                 .orElseThrow()
                 .text();
