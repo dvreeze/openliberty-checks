@@ -49,7 +49,7 @@ public final class ResourceEnvRef implements WebXmlContent {
         return element.attributeOption(new QName("id"));
     }
 
-    public String resRefName() {
+    public String resourceEnvRefName() {
         String ns = element.elementName().getNamespaceURI();
         return element.childElementStream(hasName(ns, "resource-env-ref-name"))
                 .findFirst()
@@ -57,7 +57,7 @@ public final class ResourceEnvRef implements WebXmlContent {
                 .text();
     }
 
-    public Optional<String> resTypeOption() {
+    public Optional<String> resourceEnvRefTypeOption() {
         String ns = element.elementName().getNamespaceURI();
         return element.childElementStream(hasName(ns, "resource-env-ref-type"))
                 .findFirst()
