@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Taken from: https://docs.redhat.com/en/documentation/red_hat_jboss_enterprise_application_platform/7.3/html/development_guide/contexts_and_dependency_injection#exclude_beans_from_the_scanning_proces -->
 <!-- Root element from https://gedoplan.de/jakarta-ee-10-deployment-descriptors/ -->
 <beans
         xmlns="https://jakarta.ee/xml/ns/jakartaee"
@@ -6,4 +7,20 @@
         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd"
         version="4.0"
         bean-discovery-mode="annotated">
+    <scan>
+        <exclude name="com.acme.rest.*" />
+
+        <exclude name="com.acme.faces.**">
+            <if-class-not-available name="javax.faces.context.FacesContext"/>
+        </exclude>
+
+        <exclude name="com.acme.verbose.*">
+            <if-system-property name="verbosity" value="low"/>
+        </exclude>
+
+        <exclude name="com.acme.ejb.**">
+            <if-class-available name="javax.enterprise.inject.Model"/>
+            <if-system-property name="exclude-ejbs"/>
+        </exclude>
+    </scan>
 </beans>
