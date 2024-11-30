@@ -17,25 +17,22 @@
 package eu.cdevreeze.openlibertychecks.xml.server;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
 import java.util.Optional;
 
-import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
-
 /**
- * Element named "library" in a server.xml file.
+ * Element named "jdbcDriver" in a server.xml file.
  *
  * @author Chris de Vreeze
  */
-public final class Library implements ServerXmlContent {
+public final class JdbcDriver implements ServerXmlContent {
 
     private final ElementTree.Element element;
 
-    public Library(ElementTree.Element element) {
-        Preconditions.checkArgument(element.elementName().getLocalPart().equals("library"));
+    public JdbcDriver(ElementTree.Element element) {
+        Preconditions.checkArgument(element.elementName().getLocalPart().equals("jdbcDriver"));
         this.element = element;
     }
 
@@ -43,14 +40,7 @@ public final class Library implements ServerXmlContent {
         return element;
     }
 
-    public Optional<String> idOption() {
-        return element.attributeOption(new QName("id"));
+    public Optional<String> libraryRefOption() {
+        return element.attributeOption(new QName("libraryRef"));
     }
-
-    public ImmutableList<Fileset> filesets() {
-        return element.childElementStream(hasName("fileset"))
-                .map(Fileset::new)
-                .collect(ImmutableList.toImmutableList());
-    }
-
 }

@@ -56,38 +56,20 @@ public final class DataSource implements ServerXmlContent {
         return element.attributeOption(new QName("type"));
     }
 
+    public Optional<String> connectionManagerRefOption() {
+        return element.attributeOption(new QName("connectionManagerRef"));
+    }
+
     public ImmutableList<JdbcDriver> jdbcDrivers() {
         return element.childElementStream(hasName("jdbcDriver"))
                 .map(JdbcDriver::new)
                 .collect(ImmutableList.toImmutableList());
     }
 
-    public ImmutableList<Properties> properties() {
+    public ImmutableList<Properties> propertiesElements() {
         return element.childElementStream(hasName("properties"))
                 .map(Properties::new)
                 .collect(ImmutableList.toImmutableList());
-    }
-
-    public static final class JdbcDriver implements ServerXmlContent {
-
-        private final ElementTree.Element element;
-
-        public JdbcDriver(ElementTree.Element element) {
-            Preconditions.checkArgument(element.elementName().getLocalPart().equals("jdbcDriver"));
-            Preconditions.checkArgument(element.parentElementOption().isPresent());
-            Preconditions.checkArgument(
-                    element.parentElementOption().orElseThrow().elementName().getLocalPart().equals("dataSource")
-            );
-            this.element = element;
-        }
-
-        public ElementTree.Element getElement() {
-            return element;
-        }
-
-        public Optional<String> libraryRefOption() {
-            return element.attributeOption(new QName("libraryRef"));
-        }
     }
 
     public static final class Properties implements ServerXmlContent {

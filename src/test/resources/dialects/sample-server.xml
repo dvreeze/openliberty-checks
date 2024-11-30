@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Composed from XML snippets in https://www.ibm.com/docs/en/was-liberty/base?topic=liberty-administering-manually -->
+<server>
+    <featureManager>
+        <feature>servlet-3.0</feature>
+        <feature>localConnector-1.0</feature>
+    </featureManager>
+
+    <transaction totalTranLifetimeTimeout="30s"/>
+
+    <application name="snoop" location="/mywebapps/snoop" id="snoop" type="war"/>
+
+    <dataSource id="blogDS" jndiName="jdbc/blogDS" connectionManagerRef="derbyPool">
+        <properties createDatabase="create" databaseName="C:/liberty/basics/derby/data/blogDB"/>
+        <jdbcDriver libraryRef="derbyLib"/>
+    </dataSource>
+
+    <connectionManager id="derbyPool" maxPoolSize="10"/>
+
+    <library id="derbyLib">
+        <fileset dir="C:/liberty/basics/derby" includes="derby.jar"/>
+    </library>
+</server>

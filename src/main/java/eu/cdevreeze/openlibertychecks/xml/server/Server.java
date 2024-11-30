@@ -29,6 +29,9 @@ import static eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementPredicates.hasName;
  * Root element of an OpenLiberty server.xml file.
  * <p>
  * Note that a server.xml file may contain configuration variables.
+ * <p>
+ * Mind the potential occurrences of "include" elements, Ref tags such as "authDataRef",
+ * and variables. Also mind merging rules when the server configuration is split into several files.
  *
  * @author Chris de Vreeze
  */
@@ -47,6 +50,12 @@ public final class Server implements ServerXmlContent {
 
     public Optional<String> descriptionOption() {
         return element.attributeOption(new QName("description"));
+    }
+
+    public ImmutableList<Include> includes() {
+        return element.childElementStream(hasName("include"))
+                .map(Include::new)
+                .collect(ImmutableList.toImmutableList());
     }
 
     public ImmutableList<FeatureManager> featureManagers() {
