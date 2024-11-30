@@ -44,8 +44,6 @@ public final class WebApp implements WebXmlContent {
         return element;
     }
 
-    // TODO resource-ref, resource-env-ref, display-name
-
     public ImmutableList<Servlet> servlets() {
         String ns = element.elementName().getNamespaceURI();
         return element.childElementStream(hasName(ns, "servlet"))
@@ -92,6 +90,20 @@ public final class WebApp implements WebXmlContent {
         String ns = element.elementName().getNamespaceURI();
         return element.childElementStream(hasName(ns, "error-page"))
                 .map(ErrorPage::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<ResourceRef> resourceRefs() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "resource-ref"))
+                .map(ResourceRef::new)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    public ImmutableList<ResourceEnvRef> resourceEnvRefs() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "resource-env-ref"))
+                .map(ResourceEnvRef::new)
                 .collect(ImmutableList.toImmutableList());
     }
 }
