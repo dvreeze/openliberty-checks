@@ -21,6 +21,8 @@ import jakarta.ejb.*;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import static eu.cdevreeze.openlibertychecks.reflection.internal.AnnotationSupport.findDeclaredAnnotation;
+
 /**
  * EJB annotation support (for annotations having retention "runtime").
  *
@@ -36,7 +38,7 @@ public class EjbAnnotations {
     }
 
     public static Optional<Stateless> findStatelessAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(Stateless.class));
+        return findDeclaredAnnotation(clazz, Stateless.class);
     }
 
     public static boolean isStatefulSessionBean(Class<?> clazz) {
@@ -44,7 +46,7 @@ public class EjbAnnotations {
     }
 
     public static Optional<Stateful> findStatefulAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(Stateful.class));
+        return findDeclaredAnnotation(clazz, Stateful.class);
     }
 
     public static boolean isSingletonSessionBean(Class<?> clazz) {
@@ -52,7 +54,7 @@ public class EjbAnnotations {
     }
 
     public static Optional<Singleton> findSingletonAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(Singleton.class));
+        return findDeclaredAnnotation(clazz, Singleton.class);
     }
 
     public static boolean isMessageDrivenBean(Class<?> clazz) {
@@ -60,7 +62,7 @@ public class EjbAnnotations {
     }
 
     public static Optional<MessageDriven> findMessageDrivenAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(MessageDriven.class));
+        return findDeclaredAnnotation(clazz, MessageDriven.class);
     }
 
     public static boolean hasSchedulesAnnotation(Method method) {
@@ -68,7 +70,7 @@ public class EjbAnnotations {
     }
 
     public static Optional<Schedules> findSchedulesAnnotation(Method method) {
-        return Optional.ofNullable(method.getDeclaredAnnotation(Schedules.class));
+        return findDeclaredAnnotation(method, Schedules.class);
     }
 
     public static boolean hasScheduleAnnotation(Method method) {
@@ -76,6 +78,6 @@ public class EjbAnnotations {
     }
 
     public static Optional<Schedule> findScheduleAnnotation(Method method) {
-        return Optional.ofNullable(method.getDeclaredAnnotation(Schedule.class));
+        return findDeclaredAnnotation(method, Schedule.class);
     }
 }

@@ -23,6 +23,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import static eu.cdevreeze.openlibertychecks.reflection.internal.AnnotationSupport.findAnnotation;
+
 /**
  * Jakarta common annotation support (for annotations having retention "runtime").
  *
@@ -38,7 +40,7 @@ public class CommonJakartaAnnotations {
     }
 
     public static Optional<Resource> findResourceAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getAnnotation(Resource.class));
+        return findAnnotation(clazz, Resource.class);
     }
 
     public static boolean isResource(Field field) {
@@ -46,7 +48,7 @@ public class CommonJakartaAnnotations {
     }
 
     public static Optional<Resource> findResourceAnnotation(Field field) {
-        return Optional.ofNullable(field.getAnnotation(Resource.class));
+        return findAnnotation(field, Resource.class);
     }
 
     public static boolean isResource(Method method) {
@@ -54,7 +56,7 @@ public class CommonJakartaAnnotations {
     }
 
     public static Optional<Resource> findResourceAnnotation(Method method) {
-        return Optional.ofNullable(method.getAnnotation(Resource.class));
+        return findAnnotation(method, Resource.class);
     }
 
     public static boolean hasResourcesAnnotation(Class<?> clazz) {
@@ -62,6 +64,6 @@ public class CommonJakartaAnnotations {
     }
 
     public static Optional<Resources> findResourcesAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getAnnotation(Resources.class));
+        return findAnnotation(clazz, Resources.class);
     }
 }

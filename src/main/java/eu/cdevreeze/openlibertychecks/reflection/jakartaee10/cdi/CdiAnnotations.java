@@ -23,6 +23,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import static eu.cdevreeze.openlibertychecks.reflection.internal.AnnotationSupport.findDeclaredAnnotation;
+
 /**
  * CDI annotation support (for annotations having retention "runtime").
  *
@@ -38,7 +40,7 @@ public class CdiAnnotations {
     }
 
     public static Optional<Inject> findInjectAnnotation(Constructor<?> constructor) {
-        return Optional.ofNullable(constructor.getDeclaredAnnotation(Inject.class));
+        return findDeclaredAnnotation(constructor, Inject.class);
     }
 
     public static boolean hasInjectAnnotation(Field field) {
@@ -46,7 +48,7 @@ public class CdiAnnotations {
     }
 
     public static Optional<Inject> findInjectAnnotation(Field field) {
-        return Optional.ofNullable(field.getDeclaredAnnotation(Inject.class));
+        return findDeclaredAnnotation(field, Inject.class);
     }
 
     public static boolean hasInjectAnnotation(Method method) {
@@ -54,6 +56,6 @@ public class CdiAnnotations {
     }
 
     public static Optional<Inject> findInjectAnnotation(Method method) {
-        return Optional.ofNullable(method.getDeclaredAnnotation(Inject.class));
+        return findDeclaredAnnotation(method, Inject.class);
     }
 }

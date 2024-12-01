@@ -31,6 +31,9 @@ import jakarta.servlet.http.HttpSessionListener;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static eu.cdevreeze.openlibertychecks.reflection.internal.AnnotationSupport.findAnnotation;
+import static eu.cdevreeze.openlibertychecks.reflection.internal.AnnotationSupport.findDeclaredAnnotation;
+
 /**
  * Servlet annotation support (for annotations having retention "runtime").
  *
@@ -46,7 +49,7 @@ public class ServletAnnotations {
     }
 
     public static Optional<WebServlet> findWebServletAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(WebServlet.class));
+        return findDeclaredAnnotation(clazz, WebServlet.class);
     }
 
     public static boolean isWebFilter(Class<?> clazz) {
@@ -54,7 +57,7 @@ public class ServletAnnotations {
     }
 
     public static Optional<WebFilter> findWebFilterAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(WebFilter.class));
+        return findDeclaredAnnotation(clazz, WebFilter.class);
     }
 
     public static boolean isWebListener(Class<?> clazz) {
@@ -66,7 +69,7 @@ public class ServletAnnotations {
     }
 
     public static Optional<WebListener> findWebListenerAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getDeclaredAnnotation(WebListener.class));
+        return findDeclaredAnnotation(clazz, WebListener.class);
     }
 
     public static Optional<WebListener> findAllowedWebListenerAnnotation(Class<?> clazz) {
@@ -78,7 +81,7 @@ public class ServletAnnotations {
     }
 
     public static Optional<ServletSecurity> findServletSecurityAnnotation(Class<?> clazz) {
-        return Optional.ofNullable(clazz.getAnnotation(ServletSecurity.class)); // can be inherited
+        return findAnnotation(clazz, ServletSecurity.class); // can be inherited
     }
 
     private static boolean canBeWebListener(Class<?> clazz) {
