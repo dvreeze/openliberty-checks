@@ -1,0 +1,1 @@
+Dummy file, to obtain the root of this class path directory entry (which is the parent of this file)
