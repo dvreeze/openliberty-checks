@@ -16,12 +16,15 @@
 
 package eu.cdevreeze.openlibertychecks.reflection.internal;
 
+import com.google.common.base.Preconditions;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -51,8 +54,15 @@ public class ClassPathScanning {
 
     private static Optional<Class<?>> findClass(Path classFile, Path rootDir) {
         try {
+            Preconditions.checkArgument(Files.isRegularFile(classFile));
+            Preconditions.checkArgument(classFile.getFileName().toString().endsWith(".class"));
+
             Path relativePath = rootDir.relativize(classFile.getParent());
-            String packageName = relativePath.toString().replace('/', '.');
+            String packageName =
+                    String.join(".", IntStream.range(0, relativePath.getNameCount())
+                            .mapToObj(relativePath::getName)
+                            .map(Path::toString)
+                            .toList());
             String simpleClassName = removeClassExtension(classFile.getFileName().toString());
 
             String fqcn =
