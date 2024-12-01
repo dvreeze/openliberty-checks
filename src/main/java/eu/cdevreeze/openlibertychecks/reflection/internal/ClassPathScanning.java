@@ -39,6 +39,10 @@ public class ClassPathScanning {
 
     // Naive implementation
 
+    /**
+     * Finds the classes in the given directory as one class path entry. JAR files are not considered.
+     * Only ".class" files somewhere under the given directory are found.
+     */
     public static List<Class<?>> findClasses(Path rootDir) {
         int maxDepth = 100;
         try (Stream<Path> pathStream = Files.walk(rootDir, maxDepth)) {

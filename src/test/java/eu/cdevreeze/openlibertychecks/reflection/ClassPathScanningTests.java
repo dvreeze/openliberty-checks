@@ -45,9 +45,15 @@ public class ClassPathScanningTests {
 
         List<Class<?>> classes = ClassPathScanning.findClasses(rootDir);
 
-        classes.forEach(System.out::println);
+        List<Package> packages = classes.stream().map(Class::getPackage).distinct().toList();
+        packages.forEach(System.out::println);
+
+        System.out.printf("Found %d classes%n", classes.size());
+        classes.stream().filter(c -> c.toString().indexOf('$') >= 0)
+                .forEach(c -> System.out.println("Class (with dollar sign in name): " + c));
+
         assertTrue(classes.size() >= 75);
 
-        assertTrue(classes.stream().allMatch(c -> c.getPackage().getName().startsWith("eu.cdevreeze.openlibertychecks")));
+        assertTrue(packages.stream().allMatch(p -> p.getName().startsWith("eu.cdevreeze.openlibertychecks")));
     }
 }
