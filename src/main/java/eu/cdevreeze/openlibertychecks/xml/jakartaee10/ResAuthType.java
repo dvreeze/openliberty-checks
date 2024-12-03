@@ -16,19 +16,11 @@
 
 package eu.cdevreeze.openlibertychecks.xml.jakartaee10;
 
-import javax.xml.namespace.QName;
-
 /**
- * Constants for names and namespaces.
+ * Resource auth enum.
  *
  * @author Chris de Vreeze
  */
-public class Names {
-
-    private Names() {
-    }
-
-    public static final String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee";
-
-    public static final QName JAKARTAEE_WEBAPP_NAME = new QName(JAKARTAEE_NS, "web-app");
+public enum ResAuthType {
+    Application, Container
 }

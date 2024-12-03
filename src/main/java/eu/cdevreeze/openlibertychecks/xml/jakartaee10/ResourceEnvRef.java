@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet;
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10;
 
 import com.google.common.base.Preconditions;
-import eu.cdevreeze.openlibertychecks.xml.jakartaee10.Names;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet.WebXmlContent;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;

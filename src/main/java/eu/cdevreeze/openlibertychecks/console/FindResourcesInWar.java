@@ -20,13 +20,26 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import eu.cdevreeze.openlibertychecks.reflection.internal.ClassPathScanning;
+import eu.cdevreeze.openlibertychecks.xml.ibm.server.JndiEntry;
+import eu.cdevreeze.openlibertychecks.xml.ibm.server.Server;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.Names;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.ResourceRef;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet.WebApp;
 import eu.cdevreeze.yaidom4j.core.NamespaceScope;
+import eu.cdevreeze.yaidom4j.dom.ancestryaware.Document;
+import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 import eu.cdevreeze.yaidom4j.dom.immutabledom.Element;
+import eu.cdevreeze.yaidom4j.dom.immutabledom.Node;
 import eu.cdevreeze.yaidom4j.dom.immutabledom.NodeBuilder;
+import eu.cdevreeze.yaidom4j.dom.immutabledom.jaxpinterop.DocumentParser;
+import eu.cdevreeze.yaidom4j.dom.immutabledom.jaxpinterop.DocumentParsers;
 import eu.cdevreeze.yaidom4j.dom.immutabledom.jaxpinterop.DocumentPrinter;
 import eu.cdevreeze.yaidom4j.dom.immutabledom.jaxpinterop.DocumentPrinters;
 import jakarta.annotation.Resource;
 
+import javax.xml.namespace.QName;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,11 +153,18 @@ public class FindResourcesInWar {
     }
 
     public static Element findResourcesAsXml(Path warDir, List<Path> otherDirs) {
-        List<ResourceAnnotationInfo> resourceAnnotationInfoList = findResources(warDir, otherDirs);
+        Preconditions.checkArgument(Files.isDirectory(warDir));
+        Preconditions.checkArgument(otherDirs.stream().allMatch(Files::isDirectory));
+
+        Map<AnnotatedElement, List<Resource>> resources = findResourcesInClassesDir(warDir);
+
+        List<ResourceAnnotationInfo> resourceAnnotationInfoList = resources.entrySet().stream()
+                .flatMap(kv -> kv.getValue().stream().map(res -> new ResourceAnnotationInfo(kv.getKey(), res)))
+                .toList();
 
         var nb = new NodeBuilder.ConciseApi(NamespaceScope.empty());
 
-        return nb.element(
+        Element resourceAnnotationsElement = nb.element(
                 "resourceAnnotationOccurrences",
                 ImmutableMap.of(),
                 resourceAnnotationInfoList
@@ -152,19 +172,25 @@ public class FindResourcesInWar {
                         .map(ResourceAnnotationInfo::toXml)
                         .collect(ImmutableList.toImmutableList())
         );
-    }
 
-    public static List<ResourceAnnotationInfo> findResources(Path warDir, List<Path> otherDirs) {
-        Preconditions.checkArgument(Files.isDirectory(warDir));
-        Preconditions.checkArgument(otherDirs.stream().allMatch(Files::isDirectory));
+        ImmutableList<Node> resourceRefs = findResourceRefsInWebXmlFiles(otherDirs)
+                .stream()
+                .map(e -> e.getElement().underlyingNode())
+                .collect(ImmutableList.toImmutableList());
 
-        // TODO Use other directories, also in the method result (which needs to be more than just ResourceAnnotationInfo)
+        ImmutableList<Node> jndiEntries = findJndiEntriesInServerXmlFiles(otherDirs)
+                .stream()
+                .map(e -> e.getElement().underlyingNode())
+                .collect(ImmutableList.toImmutableList());
 
-        Map<AnnotatedElement, List<Resource>> resources = findResourcesInClassesDir(warDir);
-
-        return resources.entrySet().stream()
-                .flatMap(kv -> kv.getValue().stream().map(res -> new ResourceAnnotationInfo(kv.getKey(), res)))
-                .toList();
+        return nb.element("resourceSummary")
+                .plusChild(resourceAnnotationsElement)
+                .plusChild(
+                        nb.element("resourceRefs").withChildren(resourceRefs)
+                )
+                .plusChild(
+                        nb.element("jndiEntries").withChildren(jndiEntries)
+                );
     }
 
     public static Map<AnnotatedElement, List<Resource>> findResourcesInClassesDir(Path warDir) {
@@ -176,6 +202,28 @@ public class FindResourcesInWar {
         return webAppClasses.stream()
                 .flatMap(c -> findAllResourcesInClass(c).entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static List<ResourceRef> findResourceRefsInWebXmlFiles(List<Path> dirs) {
+        List<ElementTree.Element> webXmlRoots = dirs.stream()
+                .flatMap(dir -> findWebXmlRootElements(dir).stream())
+                .toList();
+
+        return webXmlRoots.stream()
+                .map(WebApp::new)
+                .flatMap(e -> e.resourceRefs().stream())
+                .toList();
+    }
+
+    public static List<JndiEntry> findJndiEntriesInServerXmlFiles(List<Path> dirs) {
+        List<ElementTree.Element> serverXmlRoots = dirs.stream()
+                .flatMap(dir -> findServerXmlRootElements(dir).stream())
+                .toList();
+
+        return serverXmlRoots.stream()
+                .map(Server::new)
+                .flatMap(e -> e.jndiEntries().stream())
+                .toList();
     }
 
     private static Map<AnnotatedElement, List<Resource>> findAllResourcesInClass(Class<?> clazz) {
@@ -218,5 +266,35 @@ public class FindResourcesInWar {
                 .flatMap(v -> v)
                 .distinct()
                 .toList();
+    }
+
+    private static List<ElementTree.Element> findWebXmlRootElements(Path dir) {
+        DocumentParser docParser = DocumentParsers.builder().removingInterElementWhitespace().build();
+
+        try (Stream<Path> fileStream = Files.walk(dir)) {
+            return fileStream
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().endsWith(".xml"))
+                    .map(p -> Document.from(docParser.parse(p.toUri())).documentElement())
+                    .filter(e -> e.name().equals(Names.JAKARTAEE_WEBAPP_NAME))
+                    .toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static List<ElementTree.Element> findServerXmlRootElements(Path dir) {
+        DocumentParser docParser = DocumentParsers.builder().removingInterElementWhitespace().build();
+
+        try (Stream<Path> fileStream = Files.walk(dir)) {
+            return fileStream
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().endsWith(".xml"))
+                    .map(p -> Document.from(docParser.parse(p.toUri())).documentElement())
+                    .filter(e -> e.name().equals(new QName("server")))
+                    .toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

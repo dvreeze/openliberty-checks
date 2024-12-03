@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet;
+package eu.cdevreeze.openlibertychecks.xml.jakartaee10;
 
 import com.google.common.base.Preconditions;
-import eu.cdevreeze.openlibertychecks.xml.jakartaee10.Names;
+import eu.cdevreeze.openlibertychecks.xml.jakartaee10.servlet.WebXmlContent;
 import eu.cdevreeze.yaidom4j.dom.ancestryaware.ElementTree;
 
 import javax.xml.namespace.QName;
@@ -62,5 +62,13 @@ public final class ResourceRef implements WebXmlContent {
         return element.childElementStream(hasName(ns, "res-type"))
                 .findFirst()
                 .map(ElementTree.Element::text);
+    }
+
+    public Optional<ResAuthType> resAuthOption() {
+        String ns = element.elementName().getNamespaceURI();
+        return element.childElementStream(hasName(ns, "res-auth"))
+                .findFirst()
+                .map(ElementTree.Element::text)
+                .map(ResAuthType::valueOf);
     }
 }
