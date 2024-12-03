@@ -175,12 +175,24 @@ public class FindResourcesInWar {
 
         ImmutableList<Node> resourceRefs = findResourceRefsInWebXmlFiles(otherDirs)
                 .stream()
-                .map(e -> e.getElement().underlyingNode())
+                .map(e ->
+                        nb.element(
+                                        "resourceRef",
+                                        ImmutableMap.of("doc", e.getElement().docUriOption().map(java.net.URI::toString).orElse(""))
+                                )
+                                .plusChild(e.getElement().underlyingNode())
+                )
                 .collect(ImmutableList.toImmutableList());
 
         ImmutableList<Node> jndiEntries = findJndiEntriesInServerXmlFiles(otherDirs)
                 .stream()
-                .map(e -> e.getElement().underlyingNode())
+                .map(e ->
+                        nb.element(
+                                        "jndiEntry",
+                                        ImmutableMap.of("doc", e.getElement().docUriOption().map(java.net.URI::toString).orElse(""))
+                                )
+                                .plusChild(e.getElement().underlyingNode())
+                )
                 .collect(ImmutableList.toImmutableList());
 
         return nb.element("resourceSummary")
